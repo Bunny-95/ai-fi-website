@@ -1,11 +1,9 @@
 import ExcelJS from 'exceljs';
 import fs from 'fs';
 import path from 'path';
-import lockfile from 'proper-lockfile';
-import { FILE_PATHS, BACKUP_DIR, EVENT_TYPES, GFG_COLUMNS, HACKATHON_COLUMNS, MASTERCLASS_COLUMNS } from '../config/constants.js';
+import { FILE_PATHS, EVENT_TYPES, GFG_COLUMNS, HACKATHON_COLUMNS, MASTERCLASS_COLUMNS } from '../config/constants.js';
 import { AppError } from '../utils/AppError.js';
 
-// ---- Column Definitions ----
 const getColumns = (type) => {
     if (type === EVENT_TYPES.GFG) return GFG_COLUMNS;
     if (type === EVENT_TYPES.HACKATHON) return HACKATHON_COLUMNS;
@@ -13,105 +11,56 @@ const getColumns = (type) => {
     return [];
 };
 
-// ---- Backup Utility ----
-// Creates a timestamped copy of the Excel file for safety
-const createBackup = async (filePath) => {
-    try {
-        if (!fs.existsSync(BACKUP_DIR)) {
-            fs.mkdirSync(BACKUP_DIR, { recursive: true });
-        }
-        const fileName = path.basename(filePath, '.xlsx');
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const backupPath = path.join(BACKUP_DIR, `${fileName}_${timestamp}.xlsx`);
-
-        await fs.promises.copyFile(filePath, backupPath);
-    } catch (error) {
-        console.error(`⚠️ Backup Warning: Failed to backup ${path.basename(filePath)}`, error.message);
-        // We log but do not throw, so user registration isn't blocked by backup failure
-    }
-};
-
-/**
- * Appends a new registration row to the specified event's Excel file.
- * Handles file creation, directory structure, locking, and backups.
- * 
- * @param {string} eventType - The type of event (GFG, HACKATHON, MASTERCLASS)
- * @param {object} data - The row data to append
- */
 export const addRegistration = async (eventType, data) => {
-    const filePath = FILE_PATHS[eventType];
+    const rawPath = FILE_PATHS[eventType];
+    if (!rawPath) throw new AppError('Invalid event type', 500);
 
-    if (!filePath) {
-        throw new AppError('Configuration Error: Invalid event type provided', 500);
-    }
-
-    // 1. Ensure Directory Exists
+    const filePath = path.resolve(rawPath);
     const dir = path.dirname(filePath);
+
+    // Ensure Directory
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
     }
 
-    let releaseLock;
-
     try {
-        // 2. Initialize File if Missing
-        if (!fs.existsSync(filePath)) {
-            const workbook = new ExcelJS.Workbook();
-            const sheet = workbook.addWorksheet('Registrations');
-            sheet.columns = getColumns(eventType);
+        const workbook = new ExcelJS.Workbook();
+        let sheet;
+
+        const fileExists = fs.existsSync(filePath);
+        const colDefinitions = getColumns(eventType);
+
+        // Initialize file if new
+        if (!fileExists) {
+            console.log(`[Excel] Creating new file: ${path.basename(filePath)}`);
+            sheet = workbook.addWorksheet('Registrations');
+            sheet.columns = colDefinitions;
             await workbook.xlsx.writeFile(filePath);
         }
 
-        // 3. Acquire File Lock (Concurrency Safety)
-        try {
-            releaseLock = await lockfile.lock(filePath, {
-                retries: { retries: 5, factor: 2, minTimeout: 100, maxTimeout: 1000 },
-                stale: 10000 // Treat lock as stale after 10s
-            });
-        } catch (lockError) {
-            console.error(`Lock Error on ${filePath}:`, lockError.message);
-            throw new AppError('System Busy: Could not acquire file access. Please try again momentarily.', 503);
-        }
-
-        // 4. Read & Write Operation
-        const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.readFile(filePath);
 
-        let sheet = workbook.getWorksheet(1);
-
-        // Failsafe: Re-create sheet if corrupted/missing
+        sheet = workbook.getWorksheet(1);
         if (!sheet) {
             sheet = workbook.addWorksheet('Registrations');
-            sheet.columns = getColumns(eventType);
         }
+
+        // Essential: Re-bind columns to ensure object mapping works correctly
+        sheet.columns = colDefinitions;
 
         // Append Data
         data.timestamp = new Date().toLocaleString();
         sheet.addRow(data);
 
-        // Commit to Disk
+        // Save
         await workbook.xlsx.writeFile(filePath);
-
-        // 5. Create Backup
-        await createBackup(filePath);
-
-        console.log(`✅ [${eventType}] Registration saved successfully.`);
+        console.log(`[Excel] Row appended to ${path.basename(filePath)}`);
 
     } catch (err) {
-        // Explicit EBUSY Handling
+        console.error(`[Excel Error] ${err.message}`);
         if (err.code === 'EBUSY') {
-            throw new AppError(`System Error: The file "${path.basename(filePath)}" is open in another program. Please close it and retry.`, 500);
+            throw new AppError(`System Error: File "${path.basename(filePath)}" is locked. Please close it.`, 500);
         }
-        // General Error Bubble-up
-        throw err instanceof AppError ? err : new AppError(`Failed to save registration: ${err.message}`, 500);
-    } finally {
-        // 6. Release Lock
-        if (releaseLock) {
-            try {
-                await releaseLock();
-            } catch (e) {
-                console.error('Warning: Failed to release file lock', e.message);
-            }
-        }
+        throw new AppError(`Failed to save data: ${err.message}`, 500);
     }
 };
