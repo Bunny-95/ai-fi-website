@@ -63,12 +63,10 @@ const Hero = () => {
                 <button
                     onClick={() => {
                         triggerWarp();
-                        setTimeout(() => {
-                            const element = document.getElementById('upcoming-events');
-                            if (element) {
-                                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            }
-                        }, 1500);
+                        const element = document.getElementById('upcoming-events');
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
                     }}
                     style={{
                         background: 'var(--primary-cyan)',
