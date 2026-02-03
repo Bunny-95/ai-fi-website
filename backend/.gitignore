@@ -1,0 +1,24 @@
+
+# Dependencies
+node_modules/
+
+# Environment Variables
+.env
+.env.local
+
+# Logs
+error.log
+logs/
+*.log
+
+# Data
+data/contest.xlsx
+data/hackathon.xlsx
+data/masterclass.xlsx
+data/backups/
+data/debug_test.xlsx
+
+# System
+thumbs.db
+.DS_Store
+

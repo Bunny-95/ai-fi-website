@@ -1,0 +1,20 @@
+{
+  "name": "aifi-backend",
+  "version": "1.0.0",
+  "description": "Backend API for AI-FI website registrations",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "exceljs": "^4.4.0",
+    "proper-lockfile": "^4.1.2"
+  }
+}
