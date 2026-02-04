@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
@@ -18,7 +18,7 @@ const HackathonRegistration = () => {
         setFormData(prev => ({
             ...prev,
             teamSize: size,
-            members: Array(size).fill({ name: '', college: '', year: '', branch: '' })
+            members: Array(size).fill({ name: '', college: '', year: '', branch: '', phone: '', email: '' })
         }));
     };
 
@@ -60,13 +60,22 @@ const HackathonRegistration = () => {
         }
     };
 
-    // Initialize members array if empty
+    useEffect(() => {
     if (formData.members.length === 0) {
         setFormData(prev => ({
             ...prev,
-            members: Array(prev.teamSize).fill({ name: '', college: '', year: '', branch: '' })
+            members: Array(prev.teamSize).fill({
+                name: '',
+                college: '',
+                year: '',
+                branch: '',
+                phone: '',
+                email: ''
+            })
         }));
     }
+}, [formData.members.length, formData.teamSize]);
+
 
     return (
         <div style={{ paddingTop: '100px', minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>
@@ -200,6 +209,39 @@ const HackathonRegistration = () => {
                                                     style={{ padding: '10px', borderRadius: '5px', border: 'none', background: 'rgba(255,255,255,0.1)', color: '#fff', width: '100%' }}
                                                 />
                                             )}
+                                                <input
+                                                    type="tel"
+                                                    placeholder="Phone Number"
+                                                    value={member.phone}
+                                                    onChange={(e) => handleMemberChange(index, 'phone', e.target.value)}
+                                                    pattern="[0-9]{10}"
+                                                    required
+                                                    style={{
+                                                        padding: '10px',
+                                                        borderRadius: '5px',
+                                                        border: 'none',
+                                                        background: 'rgba(255,255,255,0.1)',
+                                                        color: '#fff',
+                                                        width: '100%'
+                                                      }}
+                                                />
+                                                <input
+                                                      type="email"
+                                                      placeholder="Email Address"
+                                                      value={member.email}
+                                                      onChange={(e) => handleMemberChange(index, 'email', e.target.value)}
+                                                      required
+                                                      style={{
+                                                        padding: '10px',
+                                                        borderRadius: '5px',
+                                                        border: 'none',
+                                                        background: 'rgba(255,255,255,0.1)',
+                                                        color: '#fff',
+                                                        width: '100%'
+                                                      }}
+                                                    />
+
+
                                         </div>
                                     </div>
                                 </div>
