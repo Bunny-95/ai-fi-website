@@ -53,14 +53,14 @@ const Faculty = () => {
 
                     <div style={{ marginBottom: '1.5rem' }}>
                         <h4 style={{ color: 'var(--primary-cyan)', fontSize: '1.1rem', marginBottom: '0.5rem' }}>Areas Of Interest</h4>
-                        <p style={{ lineHeight: '1.4' }}>Machine Learning, Social Network Analysis</p>
+                        <p style={{ lineHeight: '1.4' }}>Machine Learning, Natural Language Processing, Social Network Analysis</p>
                         <p style={{ fontSize: '0.85rem', marginTop: '0.3rem' }}>Guided more than 20 UG projects and 5 PG projects</p>
                     </div>
 
                     <div style={{ marginBottom: '1.5rem' }}>
                         <h4 style={{ color: 'var(--primary-cyan)', fontSize: '1.1rem', marginBottom: '0.5rem' }}>Research Publication</h4>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                            <span style={{ fontSize: '2rem', fontWeight: 'bold', color: '#fff' }}>7</span>
+                            <span style={{ fontSize: '2rem', fontWeight: 'bold', color: '#fff' }}>18</span>
                             <ul style={{ listStyle: 'none', padding: 0, fontSize: '0.85rem' }}>
                                 <li>• Conferences: 20</li>
                                 <li>• Seminars: 10</li>
@@ -70,7 +70,7 @@ const Faculty = () => {
                     </div>
 
                     <p style={{ color: 'var(--secondary-purple)', fontWeight: 'bold', marginBottom: '1rem', fontSize: '0.85rem', lineHeight: '1.4' }}>
-                        🏆 Got best paper award at IEEE conference at NMIT
+                        🏆 Got best IEEE Award - 2 Project Proposals funded by Indian Government
                     </p>
 
                     <a href="mailto:rashmi.c@reva.edu.in" style={{
