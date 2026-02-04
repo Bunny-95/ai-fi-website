@@ -8,7 +8,9 @@ const MasterclassRegistration = () => {
         name: '',
         college: '',
         year: '',
-        branch: ''
+        branch: '',
+        phone: '',
+        email: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -135,6 +137,44 @@ const MasterclassRegistration = () => {
                             />
                         )}
                     </div>
+                    <div style={{ marginBottom: '1rem' }}>
+                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Phone Number</label>
+                        <input
+                            type="tel"
+                            required
+                            value={formData.phone}
+                            onChange={(e) => handleChange('phone', e.target.value)}
+                            placeholder="Enter phone number"
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                borderRadius: '5px',
+                                border: 'none',
+                                background: 'rgba(255,255,255,0.1)',
+                                color: '#fff'
+                            }}
+                        />
+                    </div>
+                    <div style={{ marginBottom: '2rem' }}>
+                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Email</label>
+                        <input
+                            type="email"
+                            required
+                            value={formData.email}
+                            onChange={(e) => handleChange('email', e.target.value)}
+                            placeholder="Enter email address"
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                borderRadius: '5px',
+                                border: 'none',
+                                background: 'rgba(255,255,255,0.1)',
+                                color: '#fff'
+                            }}
+                        />
+                    </div>
+
+
 
                     <button
                         type="submit"
