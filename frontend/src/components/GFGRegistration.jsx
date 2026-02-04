@@ -9,7 +9,8 @@ const GFGRegistration = () => {
         college: '',
         year: '',
         branch: '',
-        phone: ''
+        phone: '',
+        email: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -146,8 +147,20 @@ const GFGRegistration = () => {
                             placeholder="+91 XXXXXXXXXX"
                             style={{ width: '100%', padding: '10px', borderRadius: '5px', border: 'none', background: 'rgba(255,255,255,0.1)', color: '#fff' }}
                         />
+                    </div> 
+                    <div style={{ marginBottom: '1rem' }}>
+                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Email</label>
+                        <input
+                            required
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => handleChange('email', e.target.value)}
+                            placeholder="Enter Email"
+                            style={{ width: '100%', padding: '10px', borderRadius: '5px', border: 'none', background: 'rgba(255,255,255,0.1)', color: '#fff' }}
+                        />
                     </div>
 
+                     
                     <button
                         type="submit"
                         disabled={isSubmitting}
