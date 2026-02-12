@@ -28,7 +28,17 @@ const Events = () => {
                     <Zap size={40} color="var(--primary-cyan)" style={{ filter: 'drop-shadow(0 0 10px var(--primary-cyan))' }} />
                     <h3 style={{ fontSize: 'min(3.5rem, 10vw)', marginTop: '1rem', marginBottom: '0.5rem', color: '#fff' }}>AI-RENA 2.0</h3>
                     <p style={{ fontSize: '1.2rem', color: 'var(--primary-cyan)' }}>National Level AI Event Series</p>
-                </div>
+                    
+                    <div style={{ marginTop: '1.5rem', color: '#ddd' }}>
+                        <h4 style={{ color: 'var(--primary-cyan)', marginBottom: '0.5rem' }}>Hackathon Timeline</h4>
+                    
+                        <ul style={{ lineHeight: '1.8', paddingLeft: '1.2rem' }}>
+                            <li>16 Feb – Registrations Open</li>
+                            <li>3 Mar – Registrations Close</li>
+                            <li>4 Mar – Top 60 Teams Revealed</li>
+                        </ul>
+                    </div>
+                   </div>
 
                 {/* Event Timeline - 3 Boxes */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
